@@ -50,7 +50,7 @@ const articleSchema = {
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": `https://theeduassist.com/blog/${post.slug.current || post.slug || post.slug}/`
+    "@id": `https://theeduassist.com/blog/${post.slug}/`
   }
 };
 
@@ -79,7 +79,7 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
 <BlogArticleLayout
   title={post.seoTitle || `${post.title} | TheEduAssist Blog`}
   description={post.seoDescription || post.excerpt}
-  canonicalPath={post.canonicalUrl || `/blog/${post.slug.current || post.slug}/`}
+  canonicalPath={post.canonicalUrl || `/blog/${post.slug}/`}
   ogImage={post.seo?.ogImage?.asset?.url || post.heroImage || post.featuredImage?.asset?.url}
   twitterCardType={post.seo?.twitterCardType}
   type="article"
@@ -150,7 +150,7 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
           )}
 
           <ArticleShareButtons
-            url={`https://theeduassist.com/blog/${post.slug.current || post.slug}/`}
+            url={`https://theeduassist.com/blog/${post.slug}/`}
             title={post.title}
           />
         </div>
@@ -240,7 +240,7 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
         </div>
 
         <RelatedArticles
-          currentSlug={post.slug.current || post.slug}
+          currentSlug={post.slug}
           category={post.category}
           allPosts={allPosts}
         />

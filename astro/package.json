@@ -17,6 +17,7 @@
     "check:sanity:blog": "node scripts/check-sanity-blog-public.mjs"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^5.0.7",
     "@portabletext/react": "^6.2.0",
     "@portabletext/types": "^4.0.2",
@@ -27,7 +28,8 @@
     "astro": "^6.4.7",
     "groq": "^6.1.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",

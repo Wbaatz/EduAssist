@@ -17,7 +17,10 @@ import FinalCTA from "../components/sections/FinalCTA.astro";
 import SelfDiagnosisMirror from "../components/sections/SelfDiagnosisMirror.astro";
 import ImprovementSelector from "../components/sections/ImprovementSelector.astro";
 import { organizationSchema, websiteSchema, professionalServiceSchema , faqPageSchema } from '../lib/seo/schema';
+import { getAudienceSegments, getAllServices } from '../sanity/queries';
 
+const audienceSegments = await getAudienceSegments();
+const services = await getAllServices();
 
 const packageFaqs = [
   { question: "Are these fixed prices?", answer: "No. These are starting prices. Final pricing depends on content volume, course length, platform, pages, automations, integrations, review rounds, and timeline." },
@@ -54,11 +57,11 @@ const jsonLd = [
 
   <TrustStrip />
 
-  <AudienceGrid />
+  <AudienceGrid audienceSegments={audienceSegments} />
 
   <CustomerLifecycle />
 
-  <CoreServicesGrid />
+  <CoreServicesGrid services={services} />
 
   <MultiPlatformSection />
 
