@@ -4,16 +4,13 @@ import { fetchFromSanity } from '../../sanity/client';
 export function isPublicBlogPost(post: any): boolean {
   if (!post) return false;
   const slug = post.slug?.current || post.slug;
-  const publishedAt = post.publishedAt;
-  const migrationStatus = post.migrationStatus;
   const isDraft = post._id?.startsWith('drafts.');
   const noIndex = post.seo?.noindex;
 
+  // Allow posts that are not drafts and not marked as noindex
   return !!(
     slug &&
-    publishedAt &&
     !isDraft &&
-    (migrationStatus === undefined || migrationStatus === null || migrationStatus === 'approved' || migrationStatus === 'published') &&
     noIndex !== true
   );
 }
@@ -58,10 +55,14 @@ export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
     const sanityPosts = await fetchFromSanity(latestBlogPostsQuery);
     if (sanityPosts && Array.isArray(sanityPosts)) {
        // Filter here as well just to be perfectly safe, though the GROQ query handles most of it.
-       const formattedSanity: NormalizedBlogPost[] = sanityPosts.filter(isPublicBlogPost).map((post: any) => ({
+       const formattedSanity: NormalizedBlogPost[] = sanityPosts.filter(isPublicBlogPost).map((post: any) => {
+          const rawSlug = post.slug.current || post.slug;
+          const cleanSlug = rawSlug.replace(/^https?:\/\/[^\/]+\/blog\//, '').replace(/\/$/, '');
+
+          return {
           id: post._id,
           title: post.title,
-          slug: post.slug.current || post.slug,
+          slug: cleanSlug,
           category: post.category || (post.categories?.[0]?.title) || 'General',
           categories: post.categories,
           excerpt: post.excerpt,
@@ -87,9 +88,13 @@ export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
           relatedFaqs: post.relatedFaqs,
           relatedServices: post.relatedServices,
           relatedPlatforms: post.relatedPlatforms,
-          relatedPosts: Array.isArray(post.relatedPosts) ? post.relatedPosts.filter(isPublicBlogPost) : post.relatedPosts,
+          relatedPosts: Array.isArray(post.relatedPosts) ? post.relatedPosts.filter(isPublicBlogPost).map((rp: any) => ({
+            ...rp,
+            slug: (rp.slug?.current || rp.slug || '').replace(/^https?:\/\/[^\/]+\/blog\//, '').replace(/\/$/, '')
+          })) : post.relatedPosts,
           migrationStatus: post.migrationStatus,
-       }));
+       };
+       });
 
        // Deduplicate by slug
        const unique = formattedSanity.filter((v, i, a) => a.findIndex(t => (t.slug === v.slug)) === i);
