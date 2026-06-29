@@ -42,13 +42,15 @@ export type NormalizedBlogPost = {
   body?: any;
   content?: string;
   heroImage?: string;
-  featuredImage?: any;
+  mainImage?: any;
   heroImageAlt?: string;
   author?: string;
   tags?: string[];
   seo?: any;
   migrationStatus?: string;
   sources?: any[];
+  stats?: any;
+  endCta?: any;
 };
 
 export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
@@ -63,7 +65,8 @@ export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
           category: post.category || (post.categories?.[0]?.title) || 'General',
           categories: post.categories,
           excerpt: post.excerpt,
-          readingTime: post.readingTime,
+          readingTime: post.stats?.readingTime || post.readingTime,
+          stats: post.stats,
           publishedAt: post.publishedAt,
           updatedAt: post.updatedAt,
           seoTitle: post.seo?.metaTitle || post.title,
@@ -73,10 +76,11 @@ export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
           seo: post.seo,
           source: 'sanity',
           body: post.body,
+          endCta: post.endCta,
           content: post.content,
-          featuredImage: post.featuredImage,
-          heroImage: post.featuredImage?.asset?.url,
-          heroImageAlt: post.featuredImage?.alt || post.title,
+          mainImage: post.mainImage,
+          heroImage: post.mainImage?.asset?.url,
+          heroImageAlt: post.mainImage?.alt || post.title,
           author: post.author,
           tags: post.tags || [],
           blogFaqs: post.blogFaqs,

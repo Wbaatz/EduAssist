@@ -7,13 +7,14 @@ import RelatedCaseStudies from '../../components/blog/RelatedCaseStudies.astro';
 import BlogFAQs from '../../components/blog/BlogFAQs.astro';
 import ArticleShareButtons from '../../components/blog/ArticleShareButtons.astro';
 import BlogTableOfContents from '../../components/blog/BlogTableOfContents.astro';
+import { extractHeadings } from '../../utils/extractHeadings';
 
 export async function getStaticPaths() {
   const allPosts = await import('../../lib/content/getAllBlogPosts').then(m => m.getAllBlogPosts());
 
   return allPosts.map(post => {
     return {
-      params: { slug: (post.slug?.current || post.slug)?.replace(/^https?:\/\/[^\/]+\/blog\//, '').replace(/\/$/, '') },
+      params: { slug: post.slug.replace(/^https?:\/\/[^\/]+\/blog\//, '').replace(/\/$/, '') },
       props: { post, allPosts }
     };
   });
@@ -42,7 +43,7 @@ const articleSchema = {
   "author": post.author ? { "@type": "Organization", "name": post.author } : undefined,
   "datePublished": post.publishedAt || undefined,
   "dateModified": post.updatedAt || post.publishedAt || undefined,
-  "image": post.seo?.ogImage?.asset?.url || post.heroImage || post.featuredImage?.asset?.url ? `https://theeduassist.com${post.seo?.ogImage?.asset?.url || post.heroImage || post.featuredImage?.asset?.url}` : undefined,
+  "image": post.seo?.ogImage?.asset?.url || post.heroImage || post.mainImage?.asset?.url ? `https://theeduassist.com${post.seo?.ogImage?.asset?.url || post.heroImage || post.mainImage?.asset?.url}` : undefined,
   "publisher": {
     "@type": "Organization",
     "name": "TheEduAssist",
@@ -50,11 +51,11 @@ const articleSchema = {
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": `https://theeduassist.com/blog/${post.slug.current || post.slug}/`
+    "@id": `https://theeduassist.com/blog/${post.slug}/`
   }
 };
 
-const schemas = [articleSchema];
+const schemas: any[] = [articleSchema];
 
 if (schemaFaqs.length > 0) {
   const faqSchema = {
@@ -72,15 +73,16 @@ if (schemaFaqs.length > 0) {
   schemas.push(faqSchema);
 }
 
-const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block => block._type === 'block' && /^h[2-3]$/.test(block.style));
+const headings = extractHeadings(post.body || []);
+const tocEnabled = headings.length > 0;
 
 ---
 
 <BlogArticleLayout
   title={post.seoTitle || `${post.title} | TheEduAssist Blog`}
   description={post.seoDescription || post.excerpt}
-  canonicalPath={post.canonicalUrl || `/blog/${post.slug.current || post.slug}/`}
-  ogImage={post.seo?.ogImage?.asset?.url || post.heroImage || post.featuredImage?.asset?.url}
+  canonicalPath={post.canonicalUrl || `/blog/${post.slug}/`}
+  ogImage={post.seo?.ogImage?.asset?.url || post.heroImage || post.mainImage?.asset?.url}
   twitterCardType={post.seo?.twitterCardType}
   type="article"
   jsonLd={schemas}
@@ -136,7 +138,7 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
         {tocEnabled && (
           <aside class="md:w-1/4 hidden md:block">
             <div class="sticky top-24">
-              <BlogTableOfContents body={post.body} />
+              <BlogTableOfContents headings={headings} />
             </div>
           </aside>
         )}
@@ -150,9 +152,28 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
           )}
 
           <ArticleShareButtons
-            url={`https://theeduassist.com/blog/${post.slug.current || post.slug}/`}
+            url={`https://theeduassist.com/blog/${post.slug}/`}
             title={post.title}
           />
+
+          {post.endCta?.show && (
+            <div class="mt-16 p-8 bg-brand-softBg rounded-2xl border border-brand-border">
+              <h3 class="text-2xl font-bold text-brand-navy mb-4">{post.endCta.heading}</h3>
+              <p class="text-brand-textMain mb-8">{post.endCta.description}</p>
+              <div class="flex flex-wrap gap-4">
+                {post.endCta.primaryButtonText && (
+                  <a href={post.endCta.primaryButtonUrl} class="px-6 py-3 bg-brand-accent text-white font-bold rounded-lg hover:bg-opacity-90 transition-all">
+                    {post.endCta.primaryButtonText}
+                  </a>
+                )}
+                {post.endCta.secondaryButtonText && (
+                  <a href={post.endCta.secondaryButtonUrl} class="px-6 py-3 bg-transparent border-2 border-brand-accent text-brand-accent font-bold rounded-lg hover:bg-brand-accent hover:text-white transition-all">
+                    {post.endCta.secondaryButtonText}
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -240,7 +261,7 @@ const tocEnabled = post.body && Array.isArray(post.body) && post.body.some(block
         </div>
 
         <RelatedArticles
-          currentSlug={post.slug.current || post.slug}
+          currentSlug={post.slug}
           category={post.category}
           allPosts={allPosts}
         />
