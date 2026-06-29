@@ -12,7 +12,7 @@ try {
   console.log("Error fetching blog posts for LatestArticles");
 }
 
-const displayPosts = posts.slice(0, 3);
+const displayPosts = posts;
 ---
 
 
@@ -39,8 +39,8 @@ const displayPosts = posts.slice(0, 3);
           category={post.category}
           readTimeMinutes={post.readingTime}
           publishedAt={post.publishedAt}
-          image={post.heroImage || post.featuredImage?.asset?.url}
-          imageAlt={post.heroImageAlt || post.featuredImage?.alt}
+          image={post.heroImage || post.mainImage?.asset?.url}
+          imageAlt={post.heroImageAlt || post.mainImage?.alt}
           tags={post.tags}
         />
       ))}

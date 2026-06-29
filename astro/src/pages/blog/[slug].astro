@@ -146,7 +146,7 @@ const tocEnabled = headings.length > 0;
         <!-- Main Content -->
         <div class={`prose prose-lg prose-slate prose-a:text-[var(--color-primary)] hover:prose-a:text-[var(--color-accent)] max-w-none ${tocEnabled ? 'md:w-3/4' : 'md:w-full'}`}>
           {post.body ? (
-            <PortableTextRenderer value={post.body} client:load />
+            <PortableTextRenderer value={post.body} />
           ) : (
             <div set:html={post.content || "<p>Content coming soon.</p>"} />
           )}

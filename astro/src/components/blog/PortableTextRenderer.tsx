@@ -1,3 +1,4 @@
+import React from 'react';
 import { PortableText } from '@portabletext/react';
 import type { PortableTextComponents } from '@portabletext/react';
 import { createImageUrlBuilder } from '@sanity/image-url';
@@ -61,9 +62,21 @@ const components: PortableTextComponents = {
     },
   },
   block: {
-    h2: ({ children }) => <h2 className="text-3xl font-bold text-slate-800 mt-10 mb-4">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl font-bold text-slate-800 mt-8 mb-4">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-xl font-bold text-slate-800 mt-6 mb-3">{children}</h4>,
+    h2: ({ children, value }: any) => {
+      const text = value.children.map((child: any) => child.text).join('');
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return <h2 id={id} className="text-3xl font-bold text-slate-800 mt-10 mb-4">{children}</h2>;
+    },
+    h3: ({ children, value }: any) => {
+      const text = value.children.map((child: any) => child.text).join('');
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return <h3 id={id} className="text-2xl font-bold text-slate-800 mt-8 mb-4">{children}</h3>;
+    },
+    h4: ({ children, value }: any) => {
+      const text = value.children.map((child: any) => child.text).join('');
+      const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return <h4 id={id} className="text-xl font-bold text-slate-800 mt-6 mb-3">{children}</h4>;
+    },
     normal: ({ children }) => <p className="mb-6 leading-relaxed">{children}</p>,
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-[var(--color-primary)] pl-6 italic text-slate-700 my-8 py-2 bg-slate-50 rounded-r-lg">
