@@ -14,7 +14,9 @@ import ServicesFinalCTA from "../../components/services/ServicesFinalCTA.astro";
 import CaseStudyProof from "../../components/case-studies/CaseStudyProof.astro";
 
 import { professionalServiceSchema, breadcrumbSchema , faqPageSchema } from '../../lib/seo/schema';
+import { getAllServices } from '../../sanity/queries';
 
+const services = await getAllServices();
 
 const packageFaqs = [
   { question: "Are these fixed prices?", answer: "No. They are starting investments and budget guides. Final pricing depends on content volume, course length, platform, pages, automations, integrations, review rounds, and timeline." },
@@ -45,7 +47,7 @@ const jsonLd = [
   <ServicesHero />
   <ServiceFinder />
   <ServiceLifecycle />
-  <ServicesGrid />
+  <ServicesGrid services={services} />
   <PlatformSpecialty />
   <KajabiServiceHighlight />
   <AIWorkflowSection />

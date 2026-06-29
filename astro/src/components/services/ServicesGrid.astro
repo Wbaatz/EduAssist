@@ -1,5 +1,11 @@
 ---
-const services = [
+interface Props {
+  services?: any[];
+}
+
+const { services: sanityServices = [] } = Astro.props;
+
+const staticServices = [
   {
     title: "Course Creation & Curriculum Design",
     description: "Turn your expertise, outline, or raw idea into a structured course with modules, lessons, outcomes, and a clear learner journey.",
@@ -49,6 +55,15 @@ const services = [
     link: "/contact/"
   }
 ];
+
+const displays = sanityServices.length > 0
+  ? sanityServices.map((s, i) => ({
+      title: s.title,
+      description: s.summary || s.description,
+      icon: staticServices[i % staticServices.length].icon, // Use static icons as fallback
+      link: s.slug?.current ? `/services/${s.slug.current}/` : s.slug || '#'
+    }))
+  : staticServices;
 ---
 
 <section class="py-20 md:py-32 bg-white">
@@ -59,7 +74,7 @@ const services = [
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {services.map((service) => (
+      {displays.map((service) => (
         <a href={service.link} class="group block brand-card p-6 h-full hover-lift focus-ring">
           <div class="w-12 h-12 bg-brand-softBlue rounded-lg flex items-center justify-center text-brand-primary mb-6 transition-colors group-hover:bg-brand-primary group-hover:text-white">
             <Fragment set:html={service.icon} />
