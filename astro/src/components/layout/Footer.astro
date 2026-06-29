@@ -1,9 +1,11 @@
 ---
-import { getSiteSettings } from '../../sanity/queries';
+import { getSiteSettings, getNavigation } from '../../sanity/queries';
 import { shareLinks } from '../../data/shareLinks';
 
 const siteSettings = await getSiteSettings();
 const site = siteSettings || { name: 'TheEduAssist', email: 'Info@theeduassist.com', social: {} };
+
+const sanityNav = await getNavigation();
 
 const navigation = {
     services: [
@@ -30,7 +32,7 @@ const navigation = {
         { label: 'Sitemap', href: '/sitemap/' },
         { label: 'Contact', href: '/contact/' }
     ],
-    company: [
+        company: sanityNav?.footerCompanyLinks || [
         { label: 'About', href: '/about/' },
         { label: 'Services', href: '/services/' },
         { label: 'Careers', href: '/careers/' },

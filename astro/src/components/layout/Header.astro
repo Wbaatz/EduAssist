@@ -1,15 +1,17 @@
 ---
-import { getSiteSettings } from '../../sanity/queries';
+import { getSiteSettings, getNavigation } from '../../sanity/queries';
 import MobileMenu from './MobileMenu.astro';
 import { aiAssistants } from '../../data/aiAssistants';
 
 const siteSettings = await getSiteSettings();
 const site = siteSettings || { name: 'TheEduAssist', email: 'Info@theeduassist.com', social: {} };
 
-const desktopNav = [
+const navigation = await getNavigation();
+
+const desktopNav = navigation?.header || [
     { label: 'Home', href: '/' },
+    { label: 'Services', href: '/services/' },
     { label: 'Platforms', href: '/platforms/' },
-    { label: 'Pricing', href: '/services/' },
     { label: 'Case Studies', href: '/case-studies/' },
     { label: 'Blog', href: '/blog/' },
 ];
@@ -41,26 +43,26 @@ const servicesDropdown = [
             </div>
         </a>
         <nav class="hidden lg:flex space-x-3 xl:space-x-4 items-center relative">
-            <a href="/" class="text-brand-textMain hover:text-brand-accent hover:bg-brand-accent/10 px-3 py-2 font-medium focus-ring rounded-md transition-all duration-300">Home</a>
-
-            <div class="relative group">
-                <button class="text-brand-textMain hover:text-brand-accent hover:bg-brand-accent/10 px-3 py-2 font-medium focus-ring rounded-md transition-all duration-300 inline-flex items-center" aria-expanded="false" aria-haspopup="true">
-                    Services
-                    <svg class="ml-1 w-4 h-4 text-brand-textMuted group-hover:text-brand-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div class="absolute left-0 mt-2 w-72 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-brand-border/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
-                    <div class="py-2">
-                        {servicesDropdown.map((item, index) => (
-                            <a href={item.href} class={`block px-4 py-2.5 text-sm font-medium text-brand-textMain hover:bg-brand-softBg hover:text-brand-primary transition-colors focus-ring ${index === 0 ? 'border-b border-brand-border/30 font-bold mb-1' : ''}`}>
-                                {item.label}
-                            </a>
-                        ))}
+            {desktopNav.map((item) => (
+                item.label === 'Services' ? (
+                    <div class="relative group">
+                        <button class="text-brand-textMain hover:text-brand-accent hover:bg-brand-accent/10 px-3 py-2 font-medium focus-ring rounded-md transition-all duration-300 inline-flex items-center" aria-expanded="false" aria-haspopup="true">
+                            {item.label}
+                            <svg class="ml-1 w-4 h-4 text-brand-textMuted group-hover:text-brand-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-72 bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-brand-border/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
+                            <div class="py-2">
+                                {servicesDropdown.map((subItem, index) => (
+                                    <a href={subItem.href} class={`block px-4 py-2.5 text-sm font-medium text-brand-textMain hover:bg-brand-softBg hover:text-brand-primary transition-colors focus-ring ${index === 0 ? 'border-b border-brand-border/30 font-bold mb-1' : ''}`}>
+                                        {subItem.label}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            {desktopNav.slice(1).map((item) => (
-                <a href={item.href} class="text-brand-textMain hover:text-brand-accent hover:bg-brand-accent/10 px-3 py-2 font-medium focus-ring rounded-md transition-all duration-300">{item.label}</a>
+                ) : (
+                    <a href={item.href} class="text-brand-textMain hover:text-brand-accent hover:bg-brand-accent/10 px-3 py-2 font-medium focus-ring rounded-md transition-all duration-300">{item.label}</a>
+                )
             ))}
 
             <div class="relative group">

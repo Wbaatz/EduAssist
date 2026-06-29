@@ -17,10 +17,14 @@ import FinalCTA from "../components/sections/FinalCTA.astro";
 import SelfDiagnosisMirror from "../components/sections/SelfDiagnosisMirror.astro";
 import ImprovementSelector from "../components/sections/ImprovementSelector.astro";
 import { organizationSchema, websiteSchema, professionalServiceSchema , faqPageSchema } from '../lib/seo/schema';
-import { getAudienceSegments, getAllServices } from '../sanity/queries';
+import { getAudienceSegments, getAllServices, getAllTestimonials, getTrainingSolutions, getCtaBlocks, getProcessByTitle } from '../sanity/queries';
 
 const audienceSegments = await getAudienceSegments();
 const services = await getAllServices();
+const testimonials = await getAllTestimonials();
+const trainingSolutions = await getTrainingSolutions();
+const ctaBlocks = await getCtaBlocks();
+const primaryProcess = await getProcessByTitle('Primary Process');
 
 const packageFaqs = [
   { question: "Are these fixed prices?", answer: "No. These are starting prices. Final pricing depends on content volume, course length, platform, pages, automations, integrations, review rounds, and timeline." },
@@ -71,7 +75,7 @@ const jsonLd = [
 
   <AIElearningSupport />
 
-  <ElearningBuildSystem />
+  <ElearningBuildSystem process={primaryProcess} />
 
   <WhyChooseSection />
 
@@ -83,6 +87,6 @@ const jsonLd = [
 
   <StartingPoint />
 
-  <FinalCTA />
+  <FinalCTA ctaBlocks={ctaBlocks} />
 
 </Layout>

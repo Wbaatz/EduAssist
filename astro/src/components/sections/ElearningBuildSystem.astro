@@ -1,5 +1,17 @@
 ---
 // src/components/sections/ElearningBuildSystem.astro
+const { process } = Astro.props;
+
+const defaultSteps = [
+    { title: "Knowledge Extraction", desc: "We pull the best ideas out of your head and your hard drive." },
+    { title: "Curriculum Design", desc: "Structuring modules and lessons for maximum learner success." },
+    { title: "Content Production", desc: "Creating the actual videos, PDFs, and text your students will consume." },
+    { title: "Platform Build", desc: "Setting up Kajabi, your LMS, or your membership site perfectly." },
+    { title: "Automation Setup", desc: "Connecting the tech so sales, emails, and access happen automatically." },
+    { title: "Student Experience", desc: "Ensuring onboarding, communities, and support systems are flawless." }
+];
+
+const steps = process?.steps?.map((s: any) => ({ title: s.title, desc: s.description })) || defaultSteps;
 ---
 <section class="py-20 md:py-28 bg-brand-softBg overflow-hidden relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -10,14 +22,7 @@
 
         <div class="bg-white p-8 md:p-16 rounded-3xl shadow-xl border border-brand-border/60 relative">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-                {[
-                    { title: "Knowledge Extraction", desc: "We pull the best ideas out of your head and your hard drive." },
-                    { title: "Curriculum Design", desc: "Structuring modules and lessons for maximum learner success." },
-                    { title: "Content Production", desc: "Creating the actual videos, PDFs, and text your students will consume." },
-                    { title: "Platform Build", desc: "Setting up Kajabi, your LMS, or your membership site perfectly." },
-                    { title: "Automation Setup", desc: "Connecting the tech so sales, emails, and access happen automatically." },
-                    { title: "Student Experience", desc: "Ensuring onboarding, communities, and support systems are flawless." }
-                ].map((block, index) => (
+                {steps.map((block: any, index: number) => (
                     <div class="bg-brand-softBg border border-brand-border p-6 rounded-2xl hover:shadow-md transition-all hover:-translate-y-1 relative group">
                         <div class="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-brand-accent text-white flex items-center justify-center font-bold text-sm shadow-md">{index + 1}</div>
                         <h3 class="text-xl font-bold text-brand-navy mb-3">{block.title}</h3>

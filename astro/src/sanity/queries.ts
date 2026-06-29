@@ -88,14 +88,15 @@ export const latestBlogPostsQuery = `*[_type == "post" && defined(slug.current) 
   "author": author->name,
   publishedAt,
   updatedAt,
-  readingTime,
-  featuredImage {
+  stats,
+  mainImage {
     asset->{
       url
     },
     alt
   },
   body,
+  endCta,
   content,
   blogFaqs,
   relatedFaqs[]->{
