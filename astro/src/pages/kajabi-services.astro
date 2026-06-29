@@ -14,6 +14,9 @@ import StartingPoint from "../components/sections/StartingPoint.astro";
 import KajabiFAQ from "../components/kajabi/KajabiFAQ.astro";
 import KajabiFinalCTA from "../components/kajabi/KajabiFinalCTA.astro";
 import CaseStudyProof from "../components/case-studies/CaseStudyProof.astro";
+import { getAllKajabiServices } from '../sanity/queries';
+
+const kajabiServices = await getAllKajabiServices();
 
 import { serviceSchema, faqPageSchema, breadcrumbSchema } from '../lib/seo/schema';
 
@@ -52,7 +55,7 @@ const jsonLd = [
   <KajabiHero />
   <KajabiProblemSection />
   <KajabiLifecycle />
-  <KajabiServicesGrid />
+  <KajabiServicesGrid services={kajabiServices} />
   <KajabiEcosystemMap />
   <KajabiAudienceSection />
   <KajabiMigrationSection />

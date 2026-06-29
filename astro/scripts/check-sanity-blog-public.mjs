@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load env vars
-dotenv.config({ path: path.resolve(__dirname, '../.env.example') }); // Load from example for structural verification, though .env would be better if real
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 if (process.env.PUBLIC_SANITY_PROJECT_ID === 'demo' || !process.env.PUBLIC_SANITY_PROJECT_ID) {
     console.warn("Using demo project ID. This is expected if .env is missing and you are checking the build config structure.");
 }
@@ -27,7 +27,7 @@ async function run() {
     console.log(`Token used: No`);
 
     try {
-        const query = `*[_type == "blogPost" && defined(slug.current) && defined(publishedAt) && !(_id in path("drafts.**")) && (!defined(migrationStatus) || migrationStatus in ["approved", "published"]) && (!defined(seo.noindex) || seo.noindex != true)] | order(publishedAt desc)[0...5] {
+        const query = `*[_type == "post" && defined(slug.current) && defined(publishedAt) && !(_id in path("drafts.**")) && (!defined(migrationStatus) || migrationStatus in ["approved", "published"]) && (!defined(seo.noindex) || seo.noindex != true)] | order(publishedAt desc)[0...5] {
             title,
             slug,
             publishedAt,
