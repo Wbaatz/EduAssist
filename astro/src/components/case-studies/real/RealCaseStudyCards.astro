@@ -2,7 +2,27 @@
 import { caseStudies } from "../../../data/caseStudies";
 import Card from "../../ui/Card.astro";
 
-const realStudies = caseStudies.filter(c => c.isRealProject);
+interface Props {
+  caseStudies?: any[];
+}
+
+const { caseStudies: sanityCaseStudies = [] } = Astro.props;
+
+const staticStudies = caseStudies.filter(c => c.isRealProject);
+
+const displays = sanityCaseStudies.length > 0
+  ? sanityCaseStudies.map(s => ({
+      title: s.title,
+      summary: s.summary,
+      slug: s.slug?.current || s.slug,
+      clientType: s.clientType,
+      industry: s.industry,
+      challenge: s.challenge || [],
+      deliverables: s.deliverables || [],
+      services: s.services || [],
+      isRealProject: true
+    }))
+  : staticStudies;
 ---
 
 <section class="bg-white py-24 border-b border-slate-200" id="featured">
@@ -13,7 +33,7 @@ const realStudies = caseStudies.filter(c => c.isRealProject);
     </div>
 
     <div class="grid lg:grid-cols-3 gap-8">
-      {realStudies.map((study) => (
+      {displays.map((study) => (
         <Card className="flex flex-col h-full bg-white border border-slate-200 hover:shadow-lg transition-shadow duration-300">
           <div class="mb-6">
             <span class="inline-block px-3 py-1 rounded-full text-xs font-bold tracking-wide bg-[#F3FAF0] text-[#27496D] border border-[#77BA55]/30 uppercase mb-4">

@@ -48,6 +48,7 @@ export type NormalizedBlogPost = {
   tags?: string[];
   seo?: any;
   migrationStatus?: string;
+  sources?: any[];
 };
 
 export async function getAllBlogPosts(): Promise<NormalizedBlogPost[]> {
